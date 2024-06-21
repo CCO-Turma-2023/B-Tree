@@ -1,5 +1,6 @@
 #include <stdio.h>
 
 int main(){
-    return;
+    printf ("Salve");
+    return 0;
 }
