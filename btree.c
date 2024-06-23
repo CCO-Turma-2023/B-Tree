@@ -15,7 +15,6 @@ struct Btree {
     int ordem;
 };
 
-
 no* alocaNo(int ordem) {
     no *novo_no = (no*)malloc(sizeof(no));
 
@@ -94,8 +93,7 @@ int insereChave(Btree *arv, int valor) {
     if (aux->n != arv->ordem - 1){
         indice = aux->n;
         // Procurando da última posição ocupada para achar o local para inserir a chave
-        while (indice > 0 && valor < aux->chaves[indice]){
-            indice--;
+        while (indice != 0 && valor < aux->chaves[indice - 1]) {
             aux->chaves[indice] = aux->chaves[indice-1];
         }
         aux->chaves[indice] = valor;
