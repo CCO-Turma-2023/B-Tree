@@ -72,7 +72,37 @@ Btree* criarArvore(int ordem) {
     return arv;
 }
 
-void split (Btree *arv, no* aux, int valor){
+void split(Btree *arv, no *aux, int valor){
+    // Alocando um novo nó para dividir o nó aux
+    no *novoNo = alocaNo(arv->ordem), *pai;
+    // Verifica se o nó foi alocado com sucesso
+    int indice;
+    if (!novoNo){
+        return;
+    }
+    // Caso o aux for a raiz
+    if (aux == arv->raiz) {
+        pai = alocaNo (arv->ordem);
+        if (!pai){
+            return;
+        }
+        if (arv->ordem % 2 == 0){
+            indice = aux->n;
+            // Procurando da última posição ocupada para achar o local para inserir a chave
+            while (indice > 0 && valor < aux->chaves[indice-1]) {
+                aux->chaves[indice] = aux->chaves[indice-1];
+                indice--;
+            }
+            aux->chaves[indice] = valor;
+
+
+
+        }
+
+
+    } else if (arv->ordem % 2 == 0){
+        return;
+    }
     return;
 }
 
@@ -80,21 +110,22 @@ int insereChave(Btree *arv, int valor) {
     no *aux = arv->raiz;
     int indice;
 
-    // Achando o no onde será inserido o valor
+    // Achando o nó folha onde será inserido o valor
     while (!aux->folha){
         indice = 0;
-        while (valor > aux->chaves[indice] && indice < aux->n){
+        while (valor > aux->chaves[indice] && indice < aux->n) {
             indice++;
         }
         aux = aux->filhos[indice];
     }
 
     // Achando onde a chave será inserida no nó
-    if (aux->n != arv->ordem - 1){
+    if (aux->n != arv->ordem - 1) {
         indice = aux->n;
         // Procurando da última posição ocupada para achar o local para inserir a chave
         while (indice != 0 && valor < aux->chaves[indice - 1]) {
             aux->chaves[indice] = aux->chaves[indice-1];
+            indice--;
         }
         aux->chaves[indice] = valor;
     } else {
