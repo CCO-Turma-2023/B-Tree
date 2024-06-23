@@ -7,6 +7,7 @@ struct no {
     struct no **filhos;
     int n; // Número atual de chaves
     int folha; // 1 = nó é folha. 0 caso contrário.
+    struct no *pai; // Pai do nó
 };
 
 struct Btree {
@@ -53,6 +54,7 @@ no* alocaNo(int ordem) {
 
     novo_no->folha = 1;
     novo_no->n = 0;
+    novo_no->pai = NULL;
 
     return novo_no;
 }
@@ -71,8 +73,8 @@ Btree* criarArvore(int ordem) {
     return arv;
 }
 
-int split(){
-    return 0;
+void split (Btree *arv, no* aux, int valor){
+    return;
 }
 
 int insereChave(Btree *arv, int valor) {
@@ -90,7 +92,7 @@ int insereChave(Btree *arv, int valor) {
 
     // Achando onde a chave será inserida no nó
     if (aux->n != arv->ordem - 1){
-        indice = aux->n - 1;
+        indice = aux->n;
         // Procurando da última posição ocupada para achar o local para inserir a chave
         while (indice > 0 && valor < aux->chaves[indice]){
             indice--;
@@ -98,7 +100,7 @@ int insereChave(Btree *arv, int valor) {
         }
         aux->chaves[indice] = valor;
     } else {
-        split(arv, valor);
+        split(arv, aux, valor);
     }
     return 1;
 }

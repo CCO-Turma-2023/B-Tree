@@ -7,5 +7,6 @@ typedef struct Btree Btree;
 Btree* criarArvore(int ordem);
 no* alocaNo(int ordem);
 int insereChave(Btree *arv, int valor);
+void split (Btree *arv, no* aux, int valor);
 
 #endif
