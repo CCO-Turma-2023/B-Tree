@@ -60,10 +60,9 @@ Btree* criarArvore(int ordem) {
 no* split(Btree *arv, no *aux, chave chaveNova){
     // Alocando um novo nó para dividir o nó aux
     no *novoNo = alocaNo(arv->ordem), *pai;
-    int indice, i;
+    int indice, i, tamanho = aux->n;
     chave meio;
-    if (chaveNova.valor == 44)
-        printf ("oi");
+
     // Verifica se o nó foi alocado com sucesso
     if (!novoNo){
         return NULL;
@@ -156,6 +155,7 @@ int insereChave(Btree *arv, chave novaChave) {
         // Procurando da última posição ocupada para achar o local para inserir a chave
         while (indice != 0 && novaChave.valor < aux->chaves[indice - 1].valor) {
             aux->chaves[indice] = aux->chaves[indice-1];
+            aux->filhos[indice+1] = aux->filhos[indice];
             indice--;
         }
         aux->n++;

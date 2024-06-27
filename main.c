@@ -9,7 +9,13 @@ struct aluno{
 };
 
 int main() {
-    int ordem = 4;
+    int ordem;
+    printf ("Digite a ordem da arvore(Obs. Somente numeros pares e maior ou igual a 4):");
+    scanf ("%d", &ordem);
+    if (ordem%2 || ordem < 3){
+        printf ("Numero invalido.");
+        return 1;
+    }
     Btree *arvore = criarArvore(ordem);
     chave aux;
     int vetor[200];
@@ -24,13 +30,11 @@ int main() {
         insereChave(arvore, aux);
         indice++;
     }
-    int fodase = 0;
     for (int j = 0; j < indice-1; j++) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
         if (indiceArq == 0) {
-            printf("erradflp´sdp´kfpksdfpkdsfo");
+            printf("Elemento nao encontrado\n");
         } else {
-            fodase++;
             fseek(arq, 0, SEEK_SET);
             for (int i = 0; i < indiceArq - 1; i++)
                 fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
@@ -38,6 +42,5 @@ int main() {
             printf("%d - %s\n", aluno.matricula, aluno.nome);
         }
     }
-    printf ("\n%d", fodase);
     return 0;
 }
