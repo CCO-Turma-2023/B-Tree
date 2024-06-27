@@ -57,6 +57,18 @@ Btree* criarArvore(int ordem) {
     return arv;
 }
 
+void addChave(no *aux, chave novaChave) {
+    int indice = aux->n;
+    // Procurando da última posição ocupada para achar o local para inserir a chave
+    while (indice != 0 && novaChave.valor < aux->chaves[indice - 1].valor) {
+        aux->chaves[indice] = aux->chaves[indice-1];
+        aux->filhos[indice+1] = aux->filhos[indice];
+        indice--;
+    }
+    aux->n++;
+    aux->chaves[indice] = novaChave;
+}
+
 no* split(Btree *arv, no *aux, chave chaveNova){
     // Alocando um novo nó para dividir o nó aux
     no *novoNo = alocaNo(arv->ordem), *pai;
@@ -68,16 +80,18 @@ no* split(Btree *arv, no *aux, chave chaveNova){
         return NULL;
     }
     novoNo->folha = aux->folha;
-    for (i = 1; i < arv->ordem/2; i++){
-        novoNo->chaves[i-1] = aux->chaves[i+((arv->ordem/2) - 1)];
-        novoNo->filhos[i-1] = aux->filhos[i+((arv->ordem/2) - 1)];
-        novoNo->filhos[i] = aux->filhos[(i + 1)+((arv->ordem/2) - 1)];
-        if (novoNo->filhos[i-1]) {
-            novoNo->filhos[i-1]->pai = novoNo;
-            novoNo->filhos[i]->pai = novoNo;
+    indice = 0;
+    for (i = (aux->n/2) +1; i < tamanho; i++){
+        novoNo->chaves[indice] = aux->chaves[i];
+        novoNo->filhos[indice] = aux->filhos[i];
+        novoNo->filhos[indice + 1] = aux->filhos[i + 1];
+        if (novoNo->filhos[indice]) {
+            novoNo->filhos[indice]->pai = novoNo;
+            novoNo->filhos[indice + 1]->pai = novoNo;
         }
         novoNo->n++;
         aux->n--;
+        indice ++;
     }
     meio = aux->chaves[aux->n - 1];
     if (aux == arv->raiz){
@@ -125,16 +139,12 @@ no* split(Btree *arv, no *aux, chave chaveNova){
     if (meio.valor < chaveNova.valor){
         aux = novoNo;
     }
-    indice = aux->n;
-    while (indice != 0 && chaveNova.valor < aux->chaves[indice - 1].valor) {
-        aux->chaves[indice] = aux->chaves[indice-1];
-        aux->filhos[indice+1] = aux->filhos[indice];
-        indice--;
-    }
-    aux->chaves[indice] = chaveNova;
-    aux->n++;
+
+    addChave(aux, chaveNova);
     return novoNo;
 }
+
+
 
 int insereChave(Btree *arv, chave novaChave) {
     no *aux = arv->raiz;
@@ -151,15 +161,7 @@ int insereChave(Btree *arv, chave novaChave) {
 
     // Achando onde a chave será inserida no nó
     if (aux->n != arv->ordem - 1) {
-        indice = aux->n;
-        // Procurando da última posição ocupada para achar o local para inserir a chave
-        while (indice != 0 && novaChave.valor < aux->chaves[indice - 1].valor) {
-            aux->chaves[indice] = aux->chaves[indice-1];
-            aux->filhos[indice+1] = aux->filhos[indice];
-            indice--;
-        }
-        aux->n++;
-        aux->chaves[indice] = novaChave;
+        addChave(aux, novaChave);
     } else {
         split(arv, aux, novaChave);
     }
