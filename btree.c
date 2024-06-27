@@ -4,7 +4,7 @@
 
 
 
-no* alocaNo(int ordem) {
+no * alocaNo(int ordem) {
     no *novo_no = (no*)malloc(sizeof(no));
 
     // Erro de alocar nó
@@ -57,14 +57,15 @@ Btree* criarArvore(int ordem) {
     return arv;
 }
 
-void split(Btree *arv, no *aux, chave chave){
+no* split(Btree *arv, no *aux, chave chaveNova){
     // Alocando um novo nó para dividir o nó aux
     no *novoNo = alocaNo(arv->ordem), *pai;
     int indice;
     // Verifica se o nó foi alocado com sucesso
     if (!novoNo){
-        return;
+        return NULL;
     }
+
     for (int i = 1; i < arv->ordem/2; i++){
         novoNo->chaves[i-1].valor = aux->chaves[i+((arv->ordem/2) - 1)].valor;
         novoNo->chaves[i-1].indice = aux->chaves[i+((arv->ordem/2) - 1)].indice;
@@ -79,7 +80,7 @@ void split(Btree *arv, no *aux, chave chave){
     if (aux == arv->raiz){
         no *novaRaiz = alocaNo(arv->ordem);
         if (!novaRaiz){
-            return;
+            return NULL;
         }
         aux->n--;
         novaRaiz->chaves[0] = aux->chaves[aux->n];
@@ -91,10 +92,13 @@ void split(Btree *arv, no *aux, chave chave){
         arv->raiz = novaRaiz;
     } else {
         if (aux->pai->n == arv->ordem - 1){
-            split(arv, aux->pai, aux->chaves[aux->n/2]);
-            pai = aux->pai;
-            indice = pai->n - 1;
-            while (indice != 0 && chave.valor == pai->chaves[indice].valor) {;
+            chave chaveAux = aux->chaves[aux->n/2];
+            pai = split(arv, aux->pai, aux->chaves[aux->n/2]);
+            if (chaveAux.valor < chaveNova.valor) {
+                pai = aux->pai;
+            }
+            indice = pai->n;
+            while (indice != 0 && chaveNova.valor != pai->chaves[indice].valor) {;
                 indice--;
             }
             novoNo->pai = pai;
@@ -102,24 +106,26 @@ void split(Btree *arv, no *aux, chave chave){
         } else {
             pai = aux->pai;
             indice = pai->n;
-            while (indice != 0 && chave.valor < pai->chaves[indice - 1].valor) {
+            while (indice != 0 && chaveNova.valor < pai->chaves[indice - 1].valor) {
                 pai->chaves[indice].valor = pai->chaves[indice - 1].valor;
                 indice--;
             }
-            pai->chaves[indice] = chave;
+            pai->chaves[indice] = aux->chaves[(arv->ordem-1)/2];
             novoNo->pai = aux->pai;
             pai->filhos[indice + 1] = novoNo;
+            pai->n++;
+            aux->n--;
         }
     }
 
     indice = novoNo->n;
-    while (indice != 0 && chave.valor < novoNo->chaves[indice - 1].valor) {
+    while (indice != 0 && chaveNova.valor < novoNo->chaves[indice - 1].valor) {
         novoNo->chaves[indice].valor = novoNo->chaves[indice - 1].valor;
         indice--;
     }
-    novoNo->chaves[indice] = chave;
+    novoNo->chaves[indice] = chaveNova;
     novoNo->n++;
-    return;
+    return novoNo;
 }
 
 int insereChave(Btree *arv, chave novaChave) {
@@ -161,10 +167,8 @@ void imprimirArvore(no *aux){
             printf("%d ", aux->chaves[i].valor);
         }
         printf ("\n");
-        for (int i = 0; i < aux->n+1; i++){
-            printf ("filho %d: ", i);
+        for (int i = 0; i < aux->n + 1; i++){
             imprimirArvore(aux->filhos[i]);
-            printf ("\n");
         }
     }
     return;

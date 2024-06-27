@@ -25,7 +25,7 @@ typedef struct Btree Btree;
 Btree* criarArvore(int ordem);
 no* alocaNo(int ordem);
 int insereChave(Btree *arv, chave valor);
-void split (Btree *arv, no* aux, chave valor);
+no* split (Btree *arv, no* aux, chave valor);
 void imprimirArvore (no *node);
 no* getRaiz(Btree *arv);
 
