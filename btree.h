@@ -28,5 +28,6 @@ int insereChave(Btree *arv, chave valor);
 no* split (Btree *arv, no* aux, chave valor);
 void imprimirArvore (no *node);
 no* getRaiz(Btree *arv);
+int busca (no *aux, int nroMatricula);
 
 #endif

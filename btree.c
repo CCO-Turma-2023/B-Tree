@@ -60,30 +60,34 @@ Btree* criarArvore(int ordem) {
 no* split(Btree *arv, no *aux, chave chaveNova){
     // Alocando um novo nó para dividir o nó aux
     no *novoNo = alocaNo(arv->ordem), *pai;
-    int indice;
+    int indice, i;
+    chave meio;
+    if (chaveNova.valor == 44)
+        printf ("oi");
     // Verifica se o nó foi alocado com sucesso
     if (!novoNo){
         return NULL;
     }
-
-    for (int i = 1; i < arv->ordem/2; i++){
-        novoNo->chaves[i-1].valor = aux->chaves[i+((arv->ordem/2) - 1)].valor;
-        novoNo->chaves[i-1].indice = aux->chaves[i+((arv->ordem/2) - 1)].indice;
+    novoNo->folha = aux->folha;
+    for (i = 1; i < arv->ordem/2; i++){
+        novoNo->chaves[i-1] = aux->chaves[i+((arv->ordem/2) - 1)];
         novoNo->filhos[i-1] = aux->filhos[i+((arv->ordem/2) - 1)];
+        novoNo->filhos[i] = aux->filhos[(i + 1)+((arv->ordem/2) - 1)];
         if (novoNo->filhos[i-1]) {
             novoNo->filhos[i-1]->pai = novoNo;
+            novoNo->filhos[i]->pai = novoNo;
         }
         novoNo->n++;
         aux->n--;
     }
-
+    meio = aux->chaves[aux->n - 1];
     if (aux == arv->raiz){
         no *novaRaiz = alocaNo(arv->ordem);
         if (!novaRaiz){
             return NULL;
         }
         aux->n--;
-        novaRaiz->chaves[0] = aux->chaves[aux->n];
+        novaRaiz->chaves[0] = meio;
         novaRaiz->n = 1;
         novaRaiz->filhos[0] = aux;
         novaRaiz->filhos[1] = novoNo;
@@ -92,13 +96,13 @@ no* split(Btree *arv, no *aux, chave chaveNova){
         arv->raiz = novaRaiz;
     } else {
         if (aux->pai->n == arv->ordem - 1){
-            chave chaveAux = aux->chaves[aux->n/2];
-            pai = split(arv, aux->pai, aux->chaves[aux->n/2]);
-            if (chaveAux.valor < chaveNova.valor) {
+            pai = split(arv, aux->pai, meio);
+            if (meio.valor < pai->chaves[0].valor) {
                 pai = aux->pai;
             }
+            aux->n--;
             indice = pai->n;
-            while (indice != 0 && chaveNova.valor != pai->chaves[indice].valor) {;
+            while (indice != 0 && meio.valor != pai->chaves[indice].valor) {
                 indice--;
             }
             novoNo->pai = pai;
@@ -107,10 +111,11 @@ no* split(Btree *arv, no *aux, chave chaveNova){
             pai = aux->pai;
             indice = pai->n;
             while (indice != 0 && chaveNova.valor < pai->chaves[indice - 1].valor) {
-                pai->chaves[indice].valor = pai->chaves[indice - 1].valor;
+                pai->chaves[indice] = pai->chaves[indice - 1];
+                pai->filhos[indice + 1] = pai->filhos[indice];
                 indice--;
             }
-            pai->chaves[indice] = aux->chaves[(arv->ordem-1)/2];
+            pai->chaves[indice] = meio;
             novoNo->pai = aux->pai;
             pai->filhos[indice + 1] = novoNo;
             pai->n++;
@@ -118,13 +123,17 @@ no* split(Btree *arv, no *aux, chave chaveNova){
         }
     }
 
-    indice = novoNo->n;
-    while (indice != 0 && chaveNova.valor < novoNo->chaves[indice - 1].valor) {
-        novoNo->chaves[indice].valor = novoNo->chaves[indice - 1].valor;
+    if (meio.valor < chaveNova.valor){
+        aux = novoNo;
+    }
+    indice = aux->n;
+    while (indice != 0 && chaveNova.valor < aux->chaves[indice - 1].valor) {
+        aux->chaves[indice] = aux->chaves[indice-1];
+        aux->filhos[indice+1] = aux->filhos[indice];
         indice--;
     }
-    novoNo->chaves[indice] = chaveNova;
-    novoNo->n++;
+    aux->chaves[indice] = chaveNova;
+    aux->n++;
     return novoNo;
 }
 
@@ -146,7 +155,7 @@ int insereChave(Btree *arv, chave novaChave) {
         indice = aux->n;
         // Procurando da última posição ocupada para achar o local para inserir a chave
         while (indice != 0 && novaChave.valor < aux->chaves[indice - 1].valor) {
-            aux->chaves[indice].valor = aux->chaves[indice-1].valor;
+            aux->chaves[indice] = aux->chaves[indice-1];
             indice--;
         }
         aux->n++;
@@ -166,10 +175,34 @@ void imprimirArvore(no *aux){
         for (int i = 0; i < aux->n; i++) {
             printf("%d ", aux->chaves[i].valor);
         }
+        printf ("- pai: ");
+        if (aux->pai)
+        for (int i = 0; i < aux->pai->n; i++) {
+            printf("%d ", aux->pai->chaves[i].valor);
+        }
         printf ("\n");
-        for (int i = 0; i < aux->n + 1; i++){
-            imprimirArvore(aux->filhos[i]);
+        if (aux->filhos[0])
+            printf ("filhos: ");
+            for (int i = 0; i < aux->n + 1; i++){
+                imprimirArvore(aux->filhos[i]);
         }
     }
     return;
+}
+
+int busca (no *aux, int nroMatricula){
+    int i = 0;
+    // Encontre a primeira chave maior ou igual a k
+    while (i < aux->n && nroMatricula > aux->chaves[i].valor)
+        i++;
+    // Se a chave for encontrada, retorne o nó
+    if (aux->chaves[i].valor == nroMatricula)
+        return aux->chaves[i].indice;
+
+    // Se a chave não for encontrada aqui e este é um nó folha
+    if (aux->folha == 1)
+        return 0;
+
+    // Vá para o filho apropriado
+    return busca(aux->filhos[i], nroMatricula);
 }
