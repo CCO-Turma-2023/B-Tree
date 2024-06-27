@@ -4,18 +4,13 @@
 int main() {
     int ordem = 4;
     Btree *arvore = criarArvore(ordem);
+    chave aux;
 
-    for (int i = 0; i < 15; i++) {
-        insereChave(arvore, i);
+    for (int i = 0; i < 10; i++) {
+        aux.valor = i;
+        aux.indice = 9998765;
+        insereChave(arvore, aux);
     }
-
-    imprimirArvore(getRaiz(arvore), 0);
-    //  **          **                          ********
-    //    **      **                                    *
-    //      **  **           ***********                *
-    //        **                                        *
-    //      **  **           ***********                *
-    //    **      **                                    *
-    //  **          **                          **
+    imprimirArvore(getRaiz(arvore));
     return 0;
 }
