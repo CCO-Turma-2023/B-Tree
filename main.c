@@ -6,7 +6,7 @@
 
 struct aluno{
     int matricula;
-    char nome[51];
+    char nome[14];
 };
 
 int* gerarEntrada (int n){
@@ -17,8 +17,8 @@ int* gerarEntrada (int n){
     }
 
     FILE *arq = fopen("entrada2.txt", "w+");
-    FILE *nomes = fopen("nomes.txt", "r");
-    char s[51];
+    FILE *nomes = fopen("nome10000.txt", "r");
+    char s[14];
     if (!arq)
     {
         return NULL;
@@ -40,7 +40,8 @@ int* gerarEntrada (int n){
     }
 
     for (int i = 0; i < n; i++)
-    {   fscanf (nomes, "%[^\n]\n", s);
+    {
+        fscanf (nomes, "%[^\n]", s);
         fprintf (arq, "%d %s\n", v[i], s);
     }
     fclose(arq);
@@ -73,18 +74,17 @@ int main() {
         indice++;
     }
     int oi = 0;
-    for (int j = 0; j < indice-1; j+=50) {
+    for (int j = 0; j < 100; j++) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
         if (indiceArq == 0) {
             printf("Elemento nao encontrado\n");
         } else {
             oi++;
-            printf ("%d - ", indiceArq);
-            fseek(arq, 0, SEEK_SET);
-            fseek(arq, indiceArq * (sizeof(int) + sizeof(char) * 51), SEEK_SET);
+            printf ("%d - %d ..... ", vetor[j], indiceArq);
+            fseek(arq, (indiceArq-1) * 27, SEEK_SET);
             //for (int i = 0; i < indiceArq - 1; i++)
                 //fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
-            fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
+            fscanf(arq, "%d  %s", &aluno.matricula, aluno.nome);
             printf("%d - %s\n", aluno.matricula, aluno.nome);
         }
     }
