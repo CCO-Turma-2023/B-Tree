@@ -26,7 +26,7 @@ Btree* criarArvore(int ordem);
 no* alocaNo(int ordem);
 int insereChave(Btree *arv, chave valor);
 no* split (Btree *arv, no* aux, chave valor);
-int removeChave(no *raiz, chave valor);
+int removeChave(Btree *arv, chave valor);
 void imprimirArvore (no *node);
 no* getRaiz(Btree *arv);
 int busca (no *aux, int nroMatricula);
