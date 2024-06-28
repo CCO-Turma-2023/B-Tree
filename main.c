@@ -41,7 +41,7 @@ int* gerarEntrada (int n){
 
     for (int i = 0; i < n; i++)
     {
-        fscanf (nomes, "%[^\n]", s);
+        fscanf (nomes, "%s", s);
         fprintf (arq, "%d %s\n", v[i], s);
     }
     fclose(arq);
