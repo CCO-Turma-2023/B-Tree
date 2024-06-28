@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "btree.h"
 
-#define MAX_NOME 8
+#define MAX_NOME 14
 
 struct aluno{
     int matricula;
-    char nome[14];
+    char nome[MAX_NOME];
 };
 
 int* gerarEntrada (int n){
@@ -17,8 +18,8 @@ int* gerarEntrada (int n){
     }
 
     FILE *arq = fopen("entrada2.txt", "w+");
-    FILE *nomes = fopen("nome10000.txt", "r");
-    char s[14];
+    FILE *nomes = fopen("nomeReal.txt", "r");
+    char s[MAX_NOME+1];
     if (!arq)
     {
         return NULL;
@@ -29,6 +30,7 @@ int* gerarEntrada (int n){
     {
         v[i] = 2023000000 + i;
     }
+
 
     for (int i = 0; i < 1494912; i++)
     {
@@ -41,7 +43,7 @@ int* gerarEntrada (int n){
 
     for (int i = 0; i < n; i++)
     {
-        fscanf (nomes, "%s", s);
+        fscanf(nomes, "%[^\n]\n", s);
         fprintf (arq, "%d %s\n", v[i], s);
     }
     fclose(arq);
@@ -61,7 +63,7 @@ int main() {
     }
     Btree *arvore = criarArvore(ordem);
     chave aux;
-    int vetor[10000];
+    int vetor[20000];
     FILE *arq = fopen("entrada2.txt", "r");
     struct aluno aluno;
     int indice = 1, indiceArq;
@@ -74,17 +76,17 @@ int main() {
         indice++;
     }
     int oi = 0;
-    for (int j = 0; j < 100; j++) {
+    for (int j = 0; j < 10000; j+=100) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
         if (indiceArq == 0) {
             printf("Elemento nao encontrado\n");
         } else {
             oi++;
             printf ("%d - %d ..... ", vetor[j], indiceArq);
-            fseek(arq, (indiceArq-1) * 27, SEEK_SET);
+            fseek(arq, (indiceArq-1) * (13 + MAX_NOME), SEEK_SET);
             //for (int i = 0; i < indiceArq - 1; i++)
                 //fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
-            fscanf(arq, "%d  %s", &aluno.matricula, aluno.nome);
+            fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
             printf("%d - %s\n", aluno.matricula, aluno.nome);
         }
     }

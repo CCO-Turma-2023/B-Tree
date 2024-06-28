@@ -117,7 +117,7 @@ no* split(Btree *arv, no *aux, chave chaveNova){
                 pai = aux->pai; // O pai passa a ser o pai do nó antigo
             }
             aux->n--; // Diminui o número de chaves no nó antigo
-            indice = pai->n; // Índice recebe o número de chaves do pai
+            indice = pai->n - 1; // Índice recebe o número de chaves do pai
             while (indice != 0 && meio.valor != pai->chaves[indice].valor) { // Encontra a posição correta para inserir a chave
                 indice--; // Decrementa o índice
             }
