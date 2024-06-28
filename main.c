@@ -52,9 +52,9 @@ int* gerarEntrada (int n){
 
 int main() {
     int ordem;
-    int *v = gerarEntrada(10000);
+    /*int *v = gerarEntrada(10000);
     if (!v)
-        return 1;
+        return 1;*/
     printf ("Digite a ordem da arvore(Obs. Somente numeros pares e maior ou igual a 4):");
     scanf ("%d", &ordem);
     if (ordem%2 || ordem < 3){
@@ -64,7 +64,7 @@ int main() {
     Btree *arvore = criarArvore(ordem);
     chave aux;
     int vetor[20000];
-    FILE *arq = fopen("entrada2.txt", "r");
+    FILE *arq = fopen("teste.txt", "r");
     struct aluno aluno;
     int indice = 1, indiceArq;
     while (!feof(arq)) {
@@ -76,7 +76,7 @@ int main() {
         indice++;
     }
     int oi = 0;
-    for (int j = 0; j < 10000; j+=100) {
+    for (int j = 0; j < 4; j++) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
         if (indiceArq == 0) {
             printf("Elemento nao encontrado\n");

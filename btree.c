@@ -156,7 +156,7 @@ int insereChave(Btree *arv, chave novaChave) {
     // Achando o nó folha onde será inserido o valor
     while (!aux->folha) { // Enquanto não for folha
         indice = 0;
-        while (novaChave.valor > aux->chaves[indice].valor && indice < aux->n) { // Encontra nó folha para inserir
+        while (indice < aux->n && novaChave.valor > aux->chaves[indice].valor) { // Encontra nó folha para inserir
             indice++;
         }
         aux = aux->filhos[indice];
@@ -166,10 +166,66 @@ int insereChave(Btree *arv, chave novaChave) {
     if (aux->n != arv->ordem - 1) { // Se não estiver cheio, chama a função addChave
         addChave(aux, novaChave);
     } else { // Se estiver cheio, chama a função split
-        split(arv, aux, novaChave);
+        aux = split(arv, aux, novaChave);
+    }
+    if (!aux) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int removeChave(Btree *arv, chave chaveRemover){
+    no *aux = arv->raiz;
+    no *predecessor;
+    int indice = 0;
+
+    // Achando o nó onde está o valor a ser removido
+    while (aux && aux->chaves[indice].valor != chaveRemover.valor){ // Enquanto for diferente do valor a remover
+        // Procura o elemento no nó ou o filho que terá que ir depois
+        while (indice < aux->n && chaveRemover.valor > aux->chaves[indice].valor) {
+            indice++;
+        }
+        // Verifica se o elemento não foi encontrado ou se chegou no final do nó
+        if (indice == aux->n || aux->chaves[indice].valor != chaveRemover.valor) {
+            aux = aux->filhos[indice];
+            indice = 0;
+        }
+    }
+    // Elemento não encontrado
+    if (!aux){
+        printf ("O elemento não está na árvore.\n");
+        return 0;
+    }
+    // Se o elemento for folha
+    if(aux->folha){
+        while (indice < aux->n - 1){
+            aux->chaves[indice] = aux->chaves[indice + 1];
+        }
+        aux->n--;
+    } else {
+        predecessor = aux->filhos[indice];
+        while (!predecessor->folha){
+            predecessor = predecessor->filhos[predecessor->n];
+        }
+        aux->chaves[indice] = predecessor->chaves[predecessor->n - 1];
+        predecessor->n--;
+        aux = predecessor;
+    }
+    if (aux->n < arv->ordem/2 - 1){
+        // Rebola
     }
     return 1;
 }
+
+
+
+
+
+
+
+
+
 
 no* getRaiz (Btree *arv) {
     return arv->raiz;
@@ -208,7 +264,7 @@ int busca(no *aux, int nroMatricula) {
         return aux->chaves[i].indice;
     }
 
-    // Se a chave não for encontrada aqui e este é um nó folha
+    // Se o nó é folha, não há mais aonde procurar
     if (aux->folha == 1) {
         return 0;
     }
