@@ -300,6 +300,7 @@ no* merge(Btree *arv, no* noDesbal,int indiceNoDesbal){
     }
     pai->n--;
     if (pai == arv->raiz && pai->n == 0){
+        liberaNo(arv->raiz);
         arv->raiz = noDesbal;
         noDesbal->pai = NULL;
     }
