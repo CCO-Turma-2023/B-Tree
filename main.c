@@ -55,9 +55,9 @@ int main() {
     /*int *v = gerarEntrada(10000);
     if (!v)
         return 1;*/
-    printf ("Digite a ordem da arvore(Obs. Somente numeros pares e maior ou igual a 4):");
+    printf ("Digite a ordem da arvore(Obs. Somente numeros pares e maior ou igual a 6):");
     scanf ("%d", &ordem);
-    if (ordem%2 || ordem < 3){
+    if (ordem%2 || ordem < 5){
         printf ("Numero invalido.");
         return 1;
     }
@@ -95,12 +95,29 @@ int main() {
     for (int j = 0; j < indice-1; j++){
         aux.valor = vetor[j];
         aux.indice = indice;
+        removeChave(arvore, aux);
+        for (int i = j+1; i < indice-1; i++) {
+            indiceArq = busca(getRaiz(arvore), vetor[i]);
+            if (indiceArq == 0) {
+                printf("Elemento nao encontrado\n");
+            } else {
+                oi++;
+                //printf ("%d - %d ..... ", vetor[j], indiceArq);
+                fseek(arq, (indiceArq - 1) * (13 + MAX_NOME), SEEK_SET);
+                //for (int i = 0; i < indiceArq - 1; i++)
+                //fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
+                fscanf(arq, "%d  %[^\n]", &aluno.matricula, aluno.nome);
+                //printf("%d - %s\n", aluno.matricula, aluno.nome);
+            }
+        }
+        if (j % 500 == 0){
+            printf ("%d\n", j);
+        }
         /*if (j > 100){
             printf ("Valor Removido: %d\n", aux.valor);
             imprimirArvore(arvore->raiz);
             printf ("\n\n");
         }*/
-        removeChave(arvore, aux);
     }
     imprimirArvore(arvore->raiz);
     return 0;
