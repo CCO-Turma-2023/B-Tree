@@ -201,6 +201,7 @@ int removeChave(Btree *arv, chave chaveRemover){
     if(aux->folha){
         while (indice < aux->n - 1){
             aux->chaves[indice] = aux->chaves[indice + 1];
+            indice++;
         }
         aux->n--;
     } else {
@@ -218,14 +219,72 @@ int removeChave(Btree *arv, chave chaveRemover){
     return 1;
 }
 
+void rotacao (Btree *arv, no *noDesbal, int indiceNoDesbal){
+    no *pai = noDesbal->pai, *irmao;
+    int indice = 0;
+    if (indiceNoDesbal - 1 >= 0 && pai->filhos[indiceNoDesbal-1]->n - 1 >= arv->ordem/2 - 1){
+        irmao = pai->filhos[indiceNoDesbal-1]; // Pegando o irmão à esquerda
+        addChave(noDesbal, pai->chaves[indiceNoDesbal-1]); // Adicionando a chave do pai no nó desbalanceado
+        // Substituindo a chave do pai pela chave mais à direita do irmão à esquerda
+        pai->chaves[indiceNoDesbal-1] = irmao->chaves[--irmao->n];
+        // Colocando o filho mais à direita no irmão no filho mais a esquerda do nó Desbalanceado
+        noDesbal->filhos[0] = irmao->filhos[irmao->n+1];
+        irmao->filhos[irmao->n+1]->pai = noDesbal->filhos[0];
+    } else {
+        irmao = pai->filhos[indiceNoDesbal+1]; // Pegando o irmão à direita
+        addChave(noDesbal, pai->chaves[indiceNoDesbal]); // Adicionando a chave do pai no nó desbalanceado
+        pai->chaves[indiceNoDesbal] = irmao->chaves[0]; // Substituindo a primeira chave do irmão com a do pai
+        // Colocando o filho mais à esquerda no irmão no filho mais à direita do nó Desbalanceado
+        noDesbal->filhos[noDesbal->n] = irmao->filhos[0];
+        irmao->filhos[0]->pai = noDesbal;
+        // Dando shift uma casa para esquerda em todas as chaves e filhos do irmão
+        while (indice < irmao->n - 1){
+            irmao->chaves[indice] = irmao->chaves[indice+1];
+            irmao->filhos[indice] = irmao->filhos[indice+1];
+            indice++;
+        }
+        irmao->filhos[indice] = irmao->filhos[indice+1];
+        irmao->n--; // Decrementando a chave removida
+    }
+    
+    return;
+}
+
+void merge(Btree *arv, no* noDesbal,int indiceNoDesbal){
+    no *pai = noDesbal->pai, *irmao;
+
+    if (indiceNoDesbal < pai->n){
+        irmao =
+
+
+    }
+}
 
 
 
+void balanceamento (Btree *arv, no *noDesbal){
+    no* pai = noDesbal->pai;
+    int indiceNoDesbal = 0;
+
+    while (pai->filhos[indiceNoDesbal] != noDesbal){
+        indiceNoDesbal++;
+    }
+
+    // Verificando se há irmão à esquerda e se remover uma chave dele não fará com que ele fique desbalanceado OU
+    // se há irmão à direita e se remover uma chave dele não fará com que ele fique desbalanceado
+    if ((indiceNoDesbal - 1 >= 0 && pai->filhos[indiceNoDesbal-1]->n - 1 >= arv->ordem/2 - 1) ||
+        (indiceNoDesbal < pai->n && pai->filhos[indiceNoDesbal+1]->n - 1 >= arv->ordem/2 - 1)){
+
+        rotacao(arv, noDesbal, indiceNoDesbal); // Realizando a rotação
+
+    } else {
+        merge(arv, noDesbal, indiceNoDesbal);
+        if ()
+    }
 
 
 
-
-
+}
 
 no* getRaiz (Btree *arv) {
     return arv->raiz;

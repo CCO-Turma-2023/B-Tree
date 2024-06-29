@@ -30,5 +30,9 @@ int removeChave(Btree *arv, chave valor);
 void imprimirArvore (no *node);
 no* getRaiz(Btree *arv);
 int busca (no *aux, int nroMatricula);
+void balanceamento (Btree *arv, no *noDesbal);
+void rotacao (Btree *arv, no *noDesbal, int indiceIrmao);
+void merge(Btree *arv, no* noDesbal,int indiceNoDesbal)
+
 
 #endif
