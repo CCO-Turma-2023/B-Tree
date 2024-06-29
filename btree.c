@@ -199,16 +199,19 @@ int removeChave(Btree *arv, chave chaveRemover){
     }
     // Se o elemento for folha
     if(aux->folha){
+        // realiza um shift à esquerda das chaves a direita da chave a ser removida
         while (indice < aux->n - 1){
             aux->chaves[indice] = aux->chaves[indice + 1];
             indice++;
         }
         aux->n--;
     } else {
+        // procura a chave predecessora
         predecessor = aux->filhos[indice];
         while (!predecessor->folha){
             predecessor = predecessor->filhos[predecessor->n];
         }
+        //troca a chave predecessora com a chave a ser removida
         aux->chaves[indice] = predecessor->chaves[predecessor->n - 1];
         predecessor->n--;
         aux = predecessor;
