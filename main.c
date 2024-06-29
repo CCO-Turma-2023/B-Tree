@@ -75,6 +75,9 @@ int main() {
         insereChave(arvore, aux);
         indice++;
     }
+    imprimirArvore(arvore->raiz);
+    aux.valor = 2958;
+    aux.indice = indice;
     int oi = 0;
     for (int j = 0; j < 4; j++) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
@@ -90,6 +93,12 @@ int main() {
             printf("%d - %s\n", aluno.matricula, aluno.nome);
         }
     }
+    for (int j = 0; j < indice-1; j++){
+        aux.valor = vetor[j];
+        aux.indice = indice;
+        removeChave(arvore, aux);
+    }
+    imprimirArvore(arvore->raiz);
     printf ("\n%d", oi);
     return 0;
 }
