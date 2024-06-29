@@ -64,7 +64,7 @@ int main() {
     Btree *arvore = criarArvore(ordem);
     chave aux;
     int vetor[20000];
-    FILE *arq = fopen("teste.txt", "r");
+    FILE *arq = fopen("entrada2.txt", "r");
     struct aluno aluno;
     int indice = 1, indiceArq;
     while (!feof(arq)) {
@@ -75,11 +75,10 @@ int main() {
         insereChave(arvore, aux);
         indice++;
     }
-    imprimirArvore(arvore->raiz);
     aux.valor = 2958;
     aux.indice = indice;
     int oi = 0;
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < indice-1; j+=1000) {
         indiceArq = busca(getRaiz(arvore), vetor[j]);
         if (indiceArq == 0) {
             printf("Elemento nao encontrado\n");
@@ -96,9 +95,13 @@ int main() {
     for (int j = 0; j < indice-1; j++){
         aux.valor = vetor[j];
         aux.indice = indice;
+        /*if (j > 100){
+            printf ("Valor Removido: %d\n", aux.valor);
+            imprimirArvore(arvore->raiz);
+            printf ("\n\n");
+        }*/
         removeChave(arvore, aux);
     }
     imprimirArvore(arvore->raiz);
-    printf ("\n%d", oi);
     return 0;
 }
