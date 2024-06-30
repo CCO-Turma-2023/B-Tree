@@ -360,22 +360,24 @@ void imprimirArvore(no *aux) {
 }
 
 int busca(no *aux, int nroMatricula) {
-    int i = 0;
-    // Encontre a primeira chave maior ou igual ao nroMatricula
-    while (i < aux->n && nroMatricula > aux->chaves[i].valor) {
-        i++;
-    }
+    int indice = 0;
 
-    // Se a chave for encontrada, retorne o índice do aluno no arquivo
-    if (aux->chaves[i].valor == nroMatricula) {
-        return aux->chaves[i].indice;
+    // Achando o nó onde está o valor a ser removido
+    while (aux && aux->chaves[indice].valor != nroMatricula){ // Enquanto for diferente do valor a remover
+        // Procura o elemento no nó ou o filho que terá que ir depois
+        while (indice < aux->n && nroMatricula > aux->chaves[indice].valor) {
+            indice++;
+        }
+        // Verifica se o elemento não foi encontrado ou se chegou no final do nó
+        if (indice == aux->n || aux->chaves[indice].valor != nroMatricula) {
+            aux = aux->filhos[indice];
+            indice = 0;
+        }
     }
-
-    // Se o nó é folha, não há mais onde procurar
-    if (aux->folha == 1) {
+    // Elemento não encontrado
+    if (!aux){
         return 0;
     }
+    return aux->chaves[indice].indice;
 
-    // Vá para o filho apropriado
-    return busca(aux->filhos[i], nroMatricula);
 }
