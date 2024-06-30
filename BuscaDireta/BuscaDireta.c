@@ -9,7 +9,7 @@
 void BuscaDireta(char *nomeArq){
     int matricula,valor, qtd;
     char nome[15];
-    double tempo;
+    double tempo, tempoTotal = 0;
     clock_t inicio, fim;
     srand(time(NULL));
     FILE *arq;
@@ -36,6 +36,8 @@ void BuscaDireta(char *nomeArq){
         fim = clock();
         tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
         printf("Tempo gasto: %lf\n",tempo);
+        tempoTotal += tempo;
     }
+    printf ("Tempo médio gasto foi: %lf\n", tempoTotal/qtd);
     fclose(arq);
 }

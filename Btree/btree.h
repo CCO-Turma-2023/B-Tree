@@ -6,20 +6,6 @@ typedef struct chave{
     int indice;
 }chave;
 
-struct no {
-    chave *chaves; // Array de chaves
-    struct no **filhos;
-    int n; // Número atual de chaves
-    int folha; // 1 = nó é folha. 0 caso contrário.
-    struct no *pai; // Pai do nó
-};
-
-struct Btree {
-    struct no *raiz;
-    int ordem;
-};
-
-typedef struct chave chave;
 typedef struct no no;
 typedef struct Btree Btree;
 
@@ -36,6 +22,6 @@ void rotacaodir (Btree *arv, no *noDesbal, int indiceNoDesbal);
 void rotacaoesq (Btree *arv, no *noDesbal, int indiceNoDesbal);
 no* merge(Btree *arv, no* noDesbal,int indiceNoDesbal);
 void liberaNo (no *noRemovido);
-
+int getNumElementos (Btree *arv);
 
 #endif

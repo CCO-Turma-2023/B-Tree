@@ -2,6 +2,20 @@
 #include <stdlib.h>
 #include "btree.h"
 
+struct no {
+    chave *chaves; // Array de chaves
+    struct no **filhos;
+    int n; // Número atual de chaves
+    int folha; // 1 = nó é folha. 0 caso contrário.
+    struct no *pai; // Pai do nó
+};
+
+struct Btree {
+    struct no *raiz;
+    int ordem;
+    int numElementos;
+};
+
 no * alocaNo(int ordem) {
     no *novo_no = (no*)malloc(sizeof(no));
 
@@ -58,6 +72,7 @@ Btree* criarArvore(int ordem) {
 
     arv->ordem = ordem;
     arv->raiz = alocaNo(ordem);
+    arv->numElementos = 0;
 
     return arv;
 }
@@ -176,9 +191,10 @@ int insereChave(Btree *arv, chave novaChave) {
     }
     if (!aux) {
         return 0;
-    } else {
-        return 1;
     }
+
+    arv->numElementos++;
+    return 1;
 }
 
 int removeChave(Btree *arv, int chaveRemover){
@@ -203,6 +219,7 @@ int removeChave(Btree *arv, int chaveRemover){
         printf ("O elemento %d nao esta na arvore.\n", chaveRemover);
         return 0;
     }
+    arv->numElementos--;
     // Se o elemento for folha
     if(aux->folha){
         // realiza um shift à esquerda das chaves a direita da chave a ser removida
@@ -226,6 +243,10 @@ int removeChave(Btree *arv, int chaveRemover){
         balanceamento(arv, aux);
     }
     return 1;
+}
+
+int getNumElementos (Btree *arv){
+    return arv->numElementos;
 }
 
 void rotacaodir(Btree *arv, no *noDesbal, int indiceNoDesbal){
