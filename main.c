@@ -1,12 +1,6 @@
-#include <stdio.h>
+#include "Menu/Menu.h"
 
 int main() {
-    printf("cachorro");
-    return 1;
-}
-
-int main(){
-    printf ("Salve");
-    printf ("oi");
+    menu();
     return 0;
 }
