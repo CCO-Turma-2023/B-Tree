@@ -33,8 +33,8 @@ void RemoverRegistro(Btree *arv){
                 }
                 while (!feof(arq)) {
                     fscanf(arq, "%d", &elem);
-                    if (removeChave(arv, elem))
-                        printf("Removido\n");
+                    if (removeChave(arv, elem)){}
+                       printf("Removido\n");
                 }
                 break;
             default:

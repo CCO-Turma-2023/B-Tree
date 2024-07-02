@@ -9,7 +9,7 @@
 #include "BuscaBtree/BuscaBtree.h"
 
 void BuscaDireta(char *nomeArq){
-    int matricula,valor, qtd, tamanhoNome, idade, periodo;
+    int matricula,valor = 1, qtd, tamanhoNome, idade, periodo, cod;
     char *nome;
     double tempo, tempoTotal = 0;
     clock_t inicio, fim;
@@ -21,29 +21,63 @@ void BuscaDireta(char *nomeArq){
         return;
     }
     tamanhoNome = getTamanhoNome(arq);
-    printf("Digite a quantidade de buscas:");
-    scanf("%d", &qtd);
-    printf("Busca direta no arquivo:\n");
-    for(int i = 0;i < qtd; i++){
-        rewind(arq);
-        valor = 2023000000 + rand() % 15000;
-        printf("%d - ",valor);
-        inicio = clock();
-        while (!feof(arq) && matricula != valor) {
-            fscanf (arq, "%d ", &matricula);
-            fgets(nome, tamanhoNome, arq);
-            fscanf(arq, "%d %d", &idade, &periodo);
-        }
-        if (feof(arq))
-            printf("Nao encontrado - ");
-        else{
-            printf("%d - %s - %d - %d ", matricula, nome, idade, periodo);
-        }
-        fim = clock();
-        tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-        printf("Tempo gasto: %lf\n",tempo);
-        tempoTotal += tempo;
+    nome = (char*)malloc(sizeof(char)*tamanhoNome);
+    printf("Selecione o modo de busca.\n1 - Aleatorio\n2 - Escolher o registro.\n");
+    scanf("%d", &cod);
+    switch (cod) {
+        case 1:
+            printf("Digite a quantidade de buscas:");
+            scanf("%d", &qtd);
+            printf("Busca direta no arquivo:\n");
+            for(int i = 0;i < qtd; i++){
+                rewind(arq);
+                valor = 2023000000 + rand() % 15000;
+                printf("%d - ",valor);
+                inicio = clock();
+                while (!feof(arq) && matricula != valor) {
+                    fscanf (arq, "%d ", &matricula);
+                    fgets(nome, tamanhoNome, arq);
+                    fscanf(arq, "%d %d", &idade, &periodo);
+                }
+                if (feof(arq))
+                    printf("Nao encontrado - ");
+                else{
+                    printf("%d - %s - %d - %d ", matricula, nome, idade, periodo);
+                }
+                fim = clock();
+                tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                printf("Tempo gasto: %lf\n",tempo);
+                tempoTotal += tempo;
+            }
+            printf ("Tempo médio gasto foi: %lf\n", tempoTotal/qtd);
+            break;
+        case 2:
+            printf ("Digite o valor que deseja procurar ou 0 para sair: ");
+            scanf ("%d", &valor);
+            while (valor != 0) {
+                rewind(arq);
+                printf("%d - ", valor);
+                inicio = clock();
+                while (!feof(arq) && matricula != valor) {
+                    fscanf(arq, "%d ", &matricula);
+                    fgets(nome, tamanhoNome, arq);
+                    fscanf(arq, "%d %d", &idade, &periodo);
+                }
+                if (feof(arq))
+                    printf("Nao encontrado - ");
+                else {
+                    printf("%d - %s - %d - %d ", matricula, nome, idade, periodo);
+                }
+                fim = clock();
+                tempo = ((double) (fim - inicio)) / CLOCKS_PER_SEC;
+                printf("Tempo gasto: %lf\n", tempo);
+                printf ("Digite o valor que deseja procurar ou 0 para sair: ");
+                scanf ("%d", &valor);
+            }
+            break;
+        default:
+            printf ("Numero invalido.\n");
+            break;
     }
-    printf ("Tempo médio gasto foi: %lf\n", tempoTotal/qtd);
     fclose(arq);
 }
